@@ -10,6 +10,9 @@ let busMallImg =['bag.jpg', 'banana.jpg', 'bathroom.jpg', 'boots.jpg', 'breakfas
 let maximumAttempts = 25;
 let attempt = 1;
 let busMall = [];
+let busNames = [];
+let votes = [];
+let views = [];
 
 function BusMall (name){
 this.busName = name.split('.')[0];
@@ -17,6 +20,7 @@ this.busImg = `img/${name}`;
 this.votes=0;
 this.views =0;
 busMall.push(this);
+busNames.push(this.busName);
 }
 
 for(let i=0; i <busMallImg.length; i++){
@@ -32,6 +36,9 @@ function randomImage() {
 let leftIndex;
 let rightIndex;
 let centerIndex;
+let templ=-1;
+let tempc=-1;
+let tempr=-1;
 
 function renderImg(){
 
@@ -41,14 +48,18 @@ function renderImg(){
     
     centerIndex = randomImage();
     
-    if(leftIndex === rightIndex){
+    while(leftIndex === templ || leftIndex === tempc || leftIndex === tempr){
         leftIndex = randomImage();
-       }   else if (rightIndex === centerIndex){
+       }   while (rightIndex === centerIndex || rightIndex === templ || rightIndex === tempc || rightIndex === tempr){
             rightIndex = randomImage();
         }
-        else if (centerIndex === leftIndex){
+        while (centerIndex === leftIndex || centerIndex === templ || centerIndex === tempc || centerIndex === tempr || centerIndex === rightIndex){
             centerIndex = randomImage();
         }
+        templ = leftIndex;
+        tempc = centerIndex;
+        tempr = rightIndex;
+
     leftImg.setAttribute('src', busMall[leftIndex].busImg);
     rightImg.setAttribute('src', busMall[rightIndex].busImg);
     centerImg.setAttribute('src', busMall[centerIndex].busImg);
@@ -90,7 +101,49 @@ function buttonClick(){
             let liEl = document.createElement('li');
             result.appendChild(liEl);
             liEl.textContent = `${busMall[i].busName} has ${busMall[i].votes} votes and  ${busMall[i].views} views.`;
+            votes.push(busMall[i].votes);
+            views.push(busMall[i].views);
         }
         click.removeEventListener('click', buttonClick);
     }
+    chartRender();
+}
+
+
+function chartRender() {
+    let ctx = document.getElementById('myChart').getContext('2d');
+    let myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: busNames,
+            datasets: [{
+                label: '# of Votes',
+                data: votes,
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)'
+                ],
+                borderWidth: 1
+            }, {
+                label: '# of views',
+                data: views,
+                backgroundColor: [
+                    'rgba(54, 162, 235, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(54, 162, 235, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
 }
