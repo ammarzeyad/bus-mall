@@ -50,12 +50,12 @@ function renderImg(){
     
     while(leftIndex === templ || leftIndex === tempc || leftIndex === tempr){
         leftIndex = randomImage();
-       }   while (rightIndex === centerIndex || rightIndex === templ || rightIndex === tempc || rightIndex === tempr){
+       }    while (centerIndex === leftIndex ||centerIndex === templ || centerIndex === tempc || centerIndex === tempr){
+        centerIndex = randomImage();
+    } while (rightIndex === centerIndex || rightIndex === leftIndex || rightIndex === templ || rightIndex === tempc || rightIndex === tempr){
             rightIndex = randomImage();
         }
-        while (centerIndex === leftIndex || centerIndex === templ || centerIndex === tempc || centerIndex === tempr || centerIndex === rightIndex){
-            centerIndex = randomImage();
-        }
+      
         templ = leftIndex;
         tempc = centerIndex;
         tempr = rightIndex;
