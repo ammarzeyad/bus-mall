@@ -50,12 +50,12 @@ function renderImg(){
     
     while(leftIndex === templ || leftIndex === tempc || leftIndex === tempr){
         leftIndex = randomImage();
-       }   while (rightIndex === centerIndex || rightIndex === templ || rightIndex === tempc || rightIndex === tempr){
+       }    while (centerIndex === leftIndex ||centerIndex === templ || centerIndex === tempc || centerIndex === tempr){
+        centerIndex = randomImage();
+    } while (rightIndex === centerIndex || rightIndex === leftIndex || rightIndex === templ || rightIndex === tempc || rightIndex === tempr){
             rightIndex = randomImage();
         }
-        while (centerIndex === leftIndex || centerIndex === templ || centerIndex === tempc || centerIndex === tempr || centerIndex === rightIndex){
-            centerIndex = randomImage();
-        }
+      
         templ = leftIndex;
         tempc = centerIndex;
         tempr = rightIndex;
@@ -73,6 +73,22 @@ renderImg();
 leftImg.addEventListener('click', clickHandler);
 rightImg.addEventListener('click', clickHandler);
 centerImg.addEventListener('click', clickHandler);
+
+function saveToLocalStorage() {
+    let data = JSON.stringify(busMall);
+    localStorage.setItem('busMall', data);
+}
+function readFromLocalStorage() {
+    let stringObj = localStorage.getItem('busMall');
+    let normalObj = JSON.parse(stringObj);
+
+    if (normalObj) {
+        busMall = normalObj;
+        renderImg();
+    }
+}
+readFromLocalStorage();
+
 
 function clickHandler(event) {
     if (attempt <= maximumAttempts) {
@@ -105,10 +121,11 @@ function buttonClick(){
             views.push(busMall[i].views);
         }
         click.removeEventListener('click', buttonClick);
+        renderImg();
+        saveToLocalStorage();
     }
     chartRender();
 }
-
 
 function chartRender() {
     let ctx = document.getElementById('myChart').getContext('2d');
